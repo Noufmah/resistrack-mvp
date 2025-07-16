@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 import shap
 import matplotlib.pyplot as plt
 
+import streamlit_shap as st_shap
+
 # --- Data Preparation and Model Training ---
 data = {
     "Cancer_Type": ["Breast", "Lung", "Colon", "Breast", "Lung", "Colon", "Breast", "Lung", "Colon", "Breast"],
@@ -71,3 +73,11 @@ if st.button("Predict"):
     fig, ax = plt.subplots()
     shap.plots.bar(shap_values, show=False, ax=ax)
     st.pyplot(fig)
+    with st.expander("🔍 Show detailed feature contributions"):
+        force_plot = shap.force_plot(
+            explainer.expected_value,
+            shap_values.values[0],
+            input_enc.iloc[0],
+            matplotlib=False
+        )
+        st_shap(force_plot, height=300)
